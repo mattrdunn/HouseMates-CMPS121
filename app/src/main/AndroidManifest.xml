@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUp"></activity>
+        <activity android:name=".SignUp" />
+        <activity android:name=".MyHouses" />
+        <activity android:name=".ChoreList" />
+        <activity android:name=".ChoreDetail"></activity>
     </application>
 
 </manifest>
