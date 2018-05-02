@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "49204320865",
+    "firebase_url": "https://housemates-b8326.firebaseio.com",
+    "project_id": "housemates-b8326",
+    "storage_bucket": "housemates-b8326.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49204320865:android:3002820dc14ac72c",
+        "android_client_info": {
+          "package_name": "cmps121.matt.housemates"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49204320865-b6cakpb90na9qajo750p1g238kjlnlag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC-fWi9uUe2GLJ6MJfGWYcBL-I-mX3bpM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
