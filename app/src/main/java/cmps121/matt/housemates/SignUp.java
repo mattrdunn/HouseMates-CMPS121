@@ -1,12 +1,20 @@
 package cmps121.matt.housemates;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -16,6 +24,7 @@ public class SignUp extends AppCompatActivity {
     View focusView = null;
     private static FirebaseAuth auth;
     private DatabaseReference databaseRef;
+    private final String TAG = "SignUp";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +44,7 @@ public class SignUp extends AppCompatActivity {
         confirmPasswordInput = (EditText) findViewById(R.id.confirm_password);
 
         // initialize Sign Up button and checks for clicks
-        Button signUp = (Button) findViewById(R.id.sign_up_button);
+        Button signUp = (Button) findViewById(R.id.sign_up);
         signUp.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -53,7 +62,7 @@ public class SignUp extends AppCompatActivity {
 
     public void authenticateUser()
     {
-        String name = nameInput.getText().toString().trim();
+        final String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = nameInput.getText().toString().trim();
         String confirmPassword = nameInput.getText().toString().trim();
@@ -66,7 +75,46 @@ public class SignUp extends AppCompatActivity {
         }
         else
         {
+            Log.d(TAG, "Before UserInfo is created");
+            final UserInformation userInfo = new UserInformation(name, email);
+            Log.d(TAG, "After UserInfo");
 
+            auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            Log.d(TAG, "Inside the createUser mathod");
+                            if (!task.isSuccessful())
+                            {
+                                Log.d(TAG,"Authentication failed. Exception = " + task.getException());
+                                emailInput.setError(getString(R.string.error_invalid_email));
+                                focusView = emailInput;
+                                focusView.requestFocus();
+                            }
+
+                            else
+                            {
+                                FirebaseUser user = auth.getCurrentUser();
+                                if (user != null)
+                                {
+                                    Log.d(TAG, "The fullname is " + name);
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(name)
+                                            .build();
+                                    user.updateProfile(profileUpdates);
+                                }
+                                else
+                                {
+                                    databaseRef.child("users").child(user.getUid()).setValue(userInfo);
+                                    startActivity(new Intent(SignUp.this, SignIn.class));
+                                    finish();
+                                }
+
+                            }
+                        }
+                    });
         }
     }
 
@@ -79,6 +127,7 @@ public class SignUp extends AppCompatActivity {
     {
         if(name.isEmpty())
         {
+            Log.d(TAG, "THE NAME IS EMPTY");
             nameInput.setError(getString(R.string.error_field_required));
             focusView = nameInput;
             focusView.requestFocus();
@@ -95,14 +144,16 @@ public class SignUp extends AppCompatActivity {
     {
         if(password.isEmpty())
         {
-            nameInput.setError(getString(R.string.error_field_required));
+            Log.d(TAG, "THE PASSWORD IS EMPTY");
+            passwordInput.setError(getString(R.string.error_field_required));
             focusView = passwordInput;
             focusView.requestFocus();
             return true;
         }
-        else if(password.equals(confirmPassword))
+        else if(password != confirmPassword)
         {
-            nameInput.setError(getString(R.string.error_passwords_inequal));
+            Log.d(TAG, "THE PASSWORDS ARE UNEQUAL");
+            passwordInput.setError(getString(R.string.error_passwords_unequal));
             focusView = confirmPasswordInput;
             focusView.requestFocus();
             return true;
