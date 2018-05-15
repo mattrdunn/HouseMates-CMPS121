@@ -19,7 +19,8 @@
         <activity android:name=".SignUp" />
         <activity android:name=".MyHouses" />
         <activity android:name=".ChoreList" />
-        <activity android:name=".ChoreDetail"></activity>
+        <activity android:name=".ChoreDetail" />
+        <activity android:name=".SplashScreen"></activity>
     </application>
 
 </manifest>
