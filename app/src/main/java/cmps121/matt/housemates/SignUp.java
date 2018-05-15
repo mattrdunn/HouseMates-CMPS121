@@ -28,7 +28,6 @@ public class SignUp extends AppCompatActivity {
     private static FirebaseAuth auth;
     private DatabaseReference databaseRef;
     private final String TAG = "SignUp";
-    private static int result = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,33 +81,37 @@ public class SignUp extends AppCompatActivity {
             return;
         else
         {
-            Log.d(TAG, "Before UserInfo is created");
             final UserInformation userInfo = new UserInformation(name, email);
-            Log.d(TAG, "After UserInfo");
 
+            // Attempt to create new user with entered email and password.
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>()
                     {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task)
                         {
-                            Log.d(TAG, "Inside the createUser method");
-                            Log.d(TAG, "Password = "+password);
+                            // Tests for thrown Exceptions. Exceptions can be thrown because of:
+                            //    -- FirebaseAuthWeakPasswordException
+                            //    -- FirebaseAuthInvalidCredentialsException
+                            //    -- FirebaseAuthUserCollisionException
+                            // See documentation on createUserWithEmailAndPassword for more details.
                             if (!task.isSuccessful())
                             {
+                                //TODO: differentiate between Exceptions that are thrown with a failed sign-up.
                                 Log.d(TAG,"Authentication failed. Exception = " + task.getException());
                                 emailInput.setError(getString(R.string.error_invalid_email));
                                 focusView = emailInput;
                                 focusView.requestFocus();
                             }
-
+                            // If the user is created, place them into the database child "user"
+                            // (and create users if it doesn't exist)
                             else
                             {
                                 FirebaseUser user = auth.getCurrentUser();
                                 databaseRef.child("users").child(user.getUid()).setValue(userInfo);
                                 startActivity(new Intent(SignUp.this, SignIn.class));
                                 finish();
-
+                                //TODO: redirect to splash screen, then redirect to MyHouses page.
                             }
                         }
                     });
@@ -134,12 +137,13 @@ public class SignUp extends AppCompatActivity {
             return false;
     }
 
+    // Return true if the email is empty or poorly formatted. Otherwise, return false
     public boolean badEmail(String email)
     {
         if(email.isEmpty())
         {
             Log.d(TAG, "THE EMAIL IS EMPTY");
-            passwordInput.setError(getString(R.string.error_field_required));
+            emailInput.setError(getString(R.string.error_field_required));
             focusView = emailInput;
             focusView.requestFocus();
             return true;
@@ -147,7 +151,7 @@ public class SignUp extends AppCompatActivity {
         else if (!isEmailValid(email))
         {
             Log.d(TAG, "THE EMAIL IS BAD");
-            passwordInput.setError(getString(R.string.error_field_required));
+            emailInput.setError(getString(R.string.error_invalid_email));
             focusView = emailInput;
             focusView.requestFocus();
             return true;
@@ -156,6 +160,7 @@ public class SignUp extends AppCompatActivity {
             return false;
     }
 
+    // Helper function for above method
     private boolean isEmailValid(CharSequence email)
     {
         Log.d(TAG,"inside isEmailValid");
@@ -185,5 +190,4 @@ public class SignUp extends AppCompatActivity {
         else
             return false;
     }
-
 }
