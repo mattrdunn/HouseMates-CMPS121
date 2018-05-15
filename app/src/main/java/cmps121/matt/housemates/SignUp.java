@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,6 +28,7 @@ public class SignUp extends AppCompatActivity {
     private static FirebaseAuth auth;
     private DatabaseReference databaseRef;
     private final String TAG = "SignUp";
+    private static int result = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +66,20 @@ public class SignUp extends AppCompatActivity {
 
     public void authenticateUser()
     {
+        // reset error field from last call
+        focusView = null;
+        // pull strings from EditTexts
         final String name = nameInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
-        String password = nameInput.getText().toString().trim();
-        String confirmPassword = nameInput.getText().toString().trim();
+        final String password = passwordInput.getText().toString().trim();
+        final String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
-        if(badName(name)) // checks if the name is bad. If true, return.
+        if(badName(name)) // checks if the name is bad. If true, set error message and return.
+            return;
+        else if(badEmail(email)) // checks if the email is bad. If true, set error message and return.
             return;
         else if(badPassword(password, confirmPassword)) // checks if the passwords are bad. If true, return.
-        {
             return;
-        }
         else
         {
             Log.d(TAG, "Before UserInfo is created");
@@ -85,7 +92,8 @@ public class SignUp extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task)
                         {
-                            Log.d(TAG, "Inside the createUser mathod");
+                            Log.d(TAG, "Inside the createUser method");
+                            Log.d(TAG, "Password = "+password);
                             if (!task.isSuccessful())
                             {
                                 Log.d(TAG,"Authentication failed. Exception = " + task.getException());
@@ -97,20 +105,9 @@ public class SignUp extends AppCompatActivity {
                             else
                             {
                                 FirebaseUser user = auth.getCurrentUser();
-                                if (user != null)
-                                {
-                                    Log.d(TAG, "The fullname is " + name);
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(name)
-                                            .build();
-                                    user.updateProfile(profileUpdates);
-                                }
-                                else
-                                {
-                                    databaseRef.child("users").child(user.getUid()).setValue(userInfo);
-                                    startActivity(new Intent(SignUp.this, SignIn.class));
-                                    finish();
-                                }
+                                databaseRef.child("users").child(user.getUid()).setValue(userInfo);
+                                startActivity(new Intent(SignUp.this, SignIn.class));
+                                finish();
 
                             }
                         }
@@ -135,7 +132,34 @@ public class SignUp extends AppCompatActivity {
         }
         else
             return false;
+    }
 
+    public boolean badEmail(String email)
+    {
+        if(email.isEmpty())
+        {
+            Log.d(TAG, "THE EMAIL IS EMPTY");
+            passwordInput.setError(getString(R.string.error_field_required));
+            focusView = emailInput;
+            focusView.requestFocus();
+            return true;
+        }
+        else if (!isEmailValid(email))
+        {
+            Log.d(TAG, "THE EMAIL IS BAD");
+            passwordInput.setError(getString(R.string.error_field_required));
+            focusView = emailInput;
+            focusView.requestFocus();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    private boolean isEmailValid(CharSequence email)
+    {
+        Log.d(TAG,"inside isEmailValid");
+        return (Patterns.EMAIL_ADDRESS.matcher(email).matches());
 
     }
 
@@ -150,7 +174,7 @@ public class SignUp extends AppCompatActivity {
             focusView.requestFocus();
             return true;
         }
-        else if(password != confirmPassword)
+        else if(!password.equals(confirmPassword))
         {
             Log.d(TAG, "THE PASSWORDS ARE UNEQUAL");
             passwordInput.setError(getString(R.string.error_passwords_unequal));
