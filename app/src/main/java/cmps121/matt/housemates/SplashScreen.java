@@ -56,8 +56,10 @@ public class SplashScreen extends AppCompatActivity
                     UserInformation user = dataSnapshot.getValue(UserInformation.class);
                     if (user == null) {
                         Log.d(TAG, "This is a null user.");
-                    } else {
-                        Log.d("StudentRef", "First Name: " + user.getFirstName() + " Last Name: " + user.getLastName() + ", ID: " + user.getStudentId());
+                    }
+                    else
+                    {
+//                        Log.d("StudentRef", "First Name: " + user.getFirstName() + " Last Name: " + user.getLastName() + ", ID: " + user.getStudentId());
 //                        loadStudentView(); // load student page
                     }
 
