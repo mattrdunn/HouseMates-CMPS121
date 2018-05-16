@@ -38,6 +38,11 @@ public class SplashScreen extends AppCompatActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        // Access users in database
+        mUserRef = mDatabase.child("users");
+
+
+        Log.d(TAG,"we out here boys");
         if (mFirebaseUser == null) {
             //Not logged in, launch the Log in activity
             loadLogInView();
@@ -53,20 +58,27 @@ public class SplashScreen extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    UserInformation user = dataSnapshot.getValue(UserInformation.class);
-                    if (user == null) {
-                        Log.d(TAG, "This is a null user.");
-                    }
-                    else
-                    {
-//                        Log.d("StudentRef", "First Name: " + user.getFirstName() + " Last Name: " + user.getLastName() + ", ID: " + user.getStudentId());
-//                        loadStudentView(); // load student page
-                    }
+//                    UserInformation user = dataSnapshot.getValue(UserInformation.class);
+//                    if (user == null) {
+//                        Log.d(TAG, "This is a null user.");
+//                    }
+//                    else
+//                    {
+////                        Log.d("StudentRef", "First Name: " + user.getFirstName() + " Last Name: " + user.getLastName() + ", ID: " + user.getStudentId());
+////                        loadStudentView(); // load student page
+//                        startActivity(new Intent (SplashScreen.this, MyHouses.class));
+//                        finish();
+//                    }
+
+                    // Placeholder to go to MyHouses activity
+                    startActivity(new Intent (SplashScreen.this, MyHouses.class));
+                    finish();
 
                 }
 
                 @Override
-                public void onCancelled(DatabaseError error) {
+                public void onCancelled(DatabaseError error)
+                {
                     // Failed to read value
                     Log.w(TAG, "Failed to read value.", error.toException());
                 }
