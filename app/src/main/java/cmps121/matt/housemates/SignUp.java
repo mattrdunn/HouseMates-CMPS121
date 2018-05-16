@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -16,8 +15,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.ProviderQueryResult;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -98,6 +95,7 @@ public class SignUp extends AppCompatActivity {
                             if (!task.isSuccessful())
                             {
                                 //TODO: differentiate between Exceptions that are thrown with a failed sign-up.
+                                // https://stackoverflow.com/questions/40093781/check-if-given-email-exists?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
                                 Log.d(TAG,"Authentication failed. Exception = " + task.getException());
                                 emailInput.setError(getString(R.string.error_invalid_email));
                                 focusView = emailInput;

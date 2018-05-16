@@ -8,9 +8,9 @@
 
     <EditText
         android:id="@+id/sign_up_name"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
@@ -21,9 +21,9 @@
 
     <EditText
         android:id="@+id/sign_up_email"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -33,9 +33,9 @@
 
     <EditText
         android:id="@+id/sign_up_password"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -45,9 +45,9 @@
 
     <EditText
         android:id="@+id/confirm_password"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Confirm Password"
         android:inputType="textPassword"
@@ -57,10 +57,12 @@
 
     <Button
         android:id="@+id/sign_up"
-        android:layout_width="220dp"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:background="#ff9966"
         android:text="SIGN UP"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -20,7 +20,9 @@
         <activity android:name=".MyHouses" />
         <activity android:name=".ChoreList" />
         <activity android:name=".ChoreDetail" />
-        <activity android:name=".SplashScreen"></activity>
+        <activity android:name=".SplashScreen" />
+        <activity android:name=".CreateHouse" />
+        <activity android:name=".JoinHouse"></activity>
     </application>
 
 </manifest>
