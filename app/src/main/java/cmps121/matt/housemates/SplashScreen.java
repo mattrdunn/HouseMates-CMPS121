@@ -42,10 +42,9 @@ public class SplashScreen extends AppCompatActivity
         mUserRef = mDatabase.child("users");
 
 
-        Log.d(TAG,"we out here boys");
         if (mFirebaseUser == null) {
             //Not logged in, launch the Log in activity
-            loadLogInView();
+            loadSignInView();
         }
         else
         {
@@ -92,14 +91,13 @@ public class SplashScreen extends AppCompatActivity
     }
 
     //Allows for the loading of the log-in page
-    private void loadLogInView()
-        {
-//        Intent intent = new Intent(this, LoginActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(intent);
+    private void loadSignInView()
+    {
+        Intent intent = new Intent(this, SignIn.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
             Log.d(TAG, "Going to log in view activity");
-        }
-
+    }
 
 }
