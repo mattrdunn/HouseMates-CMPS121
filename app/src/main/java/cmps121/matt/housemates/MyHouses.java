@@ -27,15 +27,12 @@ import java.util.ArrayList;
 public class MyHouses extends AppCompatActivity
 {
 
-    private static final String TAG = "MyHouses";
-    private ListView houseList;
-
+    private static final String TAG = "My Houses";
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
     private DatabaseReference mUsersRef;
     private DatabaseReference mCurrentUserRef;
-    private DatabaseReference directRef;
     private ArrayAdapter<String> aa;
     private ListView listView;
 

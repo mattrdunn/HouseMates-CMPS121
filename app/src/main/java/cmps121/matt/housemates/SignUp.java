@@ -24,7 +24,7 @@ public class SignUp extends AppCompatActivity {
     View focusView = null;
     private static FirebaseAuth auth;
     private DatabaseReference databaseRef;
-    private final String TAG = "SignUp";
+    private final String TAG = "Sign Up";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +107,8 @@ public class SignUp extends AppCompatActivity {
                             {
                                 FirebaseUser user = auth.getCurrentUser();
                                 databaseRef.child("users").child(user.getUid()).setValue(userInfo);
-                                startActivity(new Intent(SignUp.this, SignIn.class));
+                                startActivity(new Intent(SignUp.this, SplashScreen.class));
                                 finish();
-                                //TODO: redirect to splash screen, then redirect to MyHouses page.
                             }
                         }
                     });

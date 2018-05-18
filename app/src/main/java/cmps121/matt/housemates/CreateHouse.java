@@ -32,7 +32,7 @@ public class CreateHouse extends AppCompatActivity
         // General reference to whole DB
         databaseRef = FirebaseDatabase.getInstance().getReference();
         // House specific reference in DB
-        houseRef = databaseRef.child("classes");
+        houseRef = databaseRef.child("houses");
 
         // Get current logged into Firebase user
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -42,7 +42,7 @@ public class CreateHouse extends AppCompatActivity
         houseNameInput = (EditText) findViewById(R.id.create_house_name);
         housePasswordInput = (EditText) findViewById(R.id.create_house_password);
 
-        Button createClass = (Button) findViewById(R.id.createHouse);
+        Button createClass = (Button) findViewById(R.id.create_house_button);
         createClass.setOnClickListener(new View.OnClickListener()
         {
             @Override
