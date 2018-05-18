@@ -1,5 +1,7 @@
 package cmps121.matt.housemates;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +42,7 @@ public class JoinHouse extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser= mFirebaseAuth.getCurrentUser();
 
-        // initialize Sign Up button and checks for clicks
+        // initialize Join House button and checks for clicks
         Button joinHouse = (Button) findViewById(R.id.join_house_button);
         joinHouse.setOnClickListener(new View.OnClickListener()
         {
@@ -60,6 +62,7 @@ public class JoinHouse extends AppCompatActivity {
         final String houseName = houseNameInput.getText().toString().trim();
         final String housePassword = housePasswordInput.getText().toString().trim();
         addUserToHouse(houseName);
+        startNext(houseName);
     }
 
     // Method that will save the user to the list of members in this house, and
@@ -86,5 +89,17 @@ public class JoinHouse extends AppCompatActivity {
         }
         else
             return false;
+    }
+
+    //Start the next intent, passing in the houseName
+    public void startNext (String houseName) {
+
+        //Create new intent to go to ChoreList page
+        Intent choreListIntent = new Intent(JoinHouse.this, ChoreList.class);
+
+        //Pass houseName to the new choreList activity
+        choreListIntent.putExtra("houseName", houseName);
+
+        startActivity(choreListIntent);
     }
 }

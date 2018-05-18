@@ -56,6 +56,7 @@ public class CreateHouse extends AppCompatActivity
 
                 // Quick fix for now, we're making pushing another activity on the stack on top
                 // of the rest instead of finishing activities b/c it won't refresh currrently
+                //TODO: Pass the houseName to the MyHouses intent
                 Intent intent = new Intent(CreateHouse.this,MyHouses.class );
                 startActivity(intent);
             }
