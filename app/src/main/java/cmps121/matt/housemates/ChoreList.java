@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -53,7 +55,7 @@ public class ChoreList extends AppCompatActivity
         choresRef = currHouseRef.child("Chores");
 
         //The list that will contain the chores
-        final ArrayList <String> list = new ArrayList<String>();
+        final ArrayList <AddChoreInformation> list = new ArrayList<AddChoreInformation>();
         listView = findViewById(R.id.chore_listview);
 
         //Retrieve data from firebase
@@ -62,16 +64,50 @@ public class ChoreList extends AppCompatActivity
            @Override
            public void onDataChange (DataSnapshot dataSnapshot) {
                for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                   list.add(ds.getKey().toString());
+
+                   //add chore objects to list so that the other info can be passed on to next intent
+                   String choreName = ds.child("choreName").getValue().toString();
+                   String choreDescription = ds.child("choreDescription").getValue().toString();
+                   String assignee = ds.child("assignee").getValue().toString();
+                   AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee);
+                   list.add(chore);
                }
-               aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, list);
+
+               //Create new string array to hold names of chores, which will be displayed in the listView
+               String[] choreItems = new String[list.size()];
+
+               for (int idx = 0; idx < choreItems.length; idx++) {
+                   choreItems[idx] = list.get(idx).choreName;
+               }
+
+               aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
                listView.setAdapter(aa);
+
            }
 
            @Override
            public void onCancelled (DatabaseError databaseError) {
 
            }
+        });
+
+
+
+        //IF ARRAY IS CLICKED
+        //Set a Listener for when a listView item is clicked
+        listView.setOnItemClickListener (new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                AddChoreInformation selected = list.get(position);
+
+                Intent intent = new Intent(ChoreList.this, ChoreDetail.class);
+
+                intent.putExtra("choreName", selected.choreName);
+                intent.putExtra("choreDescription", selected.choreDescription);
+                intent.putExtra("assignee", selected.assignee);
+
+                startActivity(intent);
+            }
         });
 
         //Add a button listener for the add chore button
