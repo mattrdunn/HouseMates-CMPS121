@@ -29,6 +29,7 @@ public class AddChore extends AppCompatActivity {
     private DatabaseReference houseRef;
     private DatabaseReference currHouseRef;
     private DatabaseReference housematesRef;
+    private DatabaseReference usersRef;
     private String houseName;
 
 
@@ -57,25 +58,67 @@ public class AddChore extends AppCompatActivity {
         //create reference to the housemates of this current house
         housematesRef = currHouseRef.child("Housemates");
 
+        //create reference to Users
+        usersRef = databaseRef.child("users");
+
         //will hold the names of housemates the user can assign the chore to
         final ArrayList<String> assigneeChoices = new ArrayList<String>();
 
         //populate the Spinner w/ users from the database
+        //For every user in houses>"housemates", match that housemate's ID with the corresponding
+        //name under that ID's key in Users
 
         housematesRef.addValueEventListener (new ValueEventListener () {
             @Override
             public void onDataChange (DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
 
-                    //TODO: change to get names, currently just gives the fatty ID
-                    assigneeChoices.add(ds.getKey().toString());
+                    //the current userID we are looking at as we iterate through Housemates
+                    final String housematesUserID = ds.getKey();
+
+                    //need to look for this userID in the users child to get the associated name
+                    usersRef.addValueEventListener (new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot data: dataSnapshot.getChildren()) {
+                                //check to see if the current user (data) equals currUserID (from Housemates)
+                                //if true, add to assigneeChoices
+
+                                final String usersUserID = data.getKey();
+
+                                if ((usersUserID.toString()).equals(housematesUserID)) {
+                                    Log.d(TAG, "inside if");
+                                    //get the name associated w/ usersUserID
+                                    //add that name to assigneeChoices
+                                    String name = data.child("name").getValue().toString();
+                                    Log.d(TAG, name);
+
+                                    assigneeChoices.add(name);
+                                    Log.d(TAG, "assigneeChoices = " + assigneeChoices.toString());
+
+
+
+                                }
+
+                            }
+
+                            Log.d(TAG, "(after datasnapshots) assigneeChoices = " + assigneeChoices.toString());
+
+                            ArrayAdapter<String> assigneeAdapter = new ArrayAdapter<>(AddChore.this,
+                                    android.R.layout.simple_spinner_item,
+                                    assigneeChoices);
+                            assigneeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            assigneeSpinner.setAdapter(assigneeAdapter);
+
+                        }
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+
+                    });
                 }
 
-                ArrayAdapter<String> assigneeAdapter = new ArrayAdapter<String>(AddChore.this,
-                                                                                android.R.layout.simple_spinner_item,
-                                                                                assigneeChoices);
-                assigneeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                assigneeSpinner.setAdapter(assigneeAdapter);
             }
 
             @Override
@@ -83,6 +126,8 @@ public class AddChore extends AppCompatActivity {
 
             }
         });
+
+
 
 
         //When this button is pressed, add the chore to the database
