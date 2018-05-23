@@ -142,6 +142,7 @@ public class AddChore extends AppCompatActivity {
 
                 addToDatabase(choreName, choreDescription, assignee);
                 finish();
+
             }
         });
 

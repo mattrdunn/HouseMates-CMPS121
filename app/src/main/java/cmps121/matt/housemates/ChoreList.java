@@ -19,8 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ChoreList extends AppCompatActivity
-{
+public class ChoreList extends AppCompatActivity {
 
     private static final String TAG = "ChoreList";
     private DatabaseReference databaseRef;
@@ -37,6 +36,21 @@ public class ChoreList extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chore_list);
+        refreshListView();
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        refreshListView();
+
+    }
+
+    public void refreshListView()
+    {
 
         //creates a reference to the entire DB
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -59,36 +73,38 @@ public class ChoreList extends AppCompatActivity
         listView = findViewById(R.id.chore_listview);
 
         //Retrieve data from firebase
-        choresRef.addValueEventListener (new ValueEventListener() {
+        choresRef.addListenerForSingleValueEvent (new ValueEventListener() {
 
-           @Override
-           public void onDataChange (DataSnapshot dataSnapshot) {
-               for (DataSnapshot ds: dataSnapshot.getChildren()) {
+            @Override
+            public void onDataChange (DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
 
-                   //add chore objects to list so that the other info can be passed on to next intent
-                   String choreName = ds.child("choreName").getValue().toString();
-                   String choreDescription = ds.child("choreDescription").getValue().toString();
-                   String assignee = ds.child("assignee").getValue().toString();
-                   AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee);
-                   list.add(chore);
-               }
+                    //add chore objects to list so that the other info can be passed on to next intent
+                    String choreName = ds.child("choreName").getValue().toString();
+                    String choreDescription = ds.child("choreDescription").getValue().toString();
+                    String assignee = ds.child("assignee").getValue().toString();
+                    AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee);
 
-               //Create new string array to hold names of chores, which will be displayed in the listView
-               String[] choreItems = new String[list.size()];
+                    list.add(chore);
+                }
 
-               for (int idx = 0; idx < choreItems.length; idx++) {
-                   choreItems[idx] = list.get(idx).choreName;
-               }
+                //Create new string array to hold names of chores, which will be displayed in the listView
+                String[] choreItems = new String[list.size()];
 
-               aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
-               listView.setAdapter(aa);
+                for (int idx = 0; idx < choreItems.length; idx++)
+                {
+                    choreItems[idx] = list.get(idx).choreName;
+                }
 
-           }
+                aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
+                listView.setAdapter(aa);
 
-           @Override
-           public void onCancelled (DatabaseError databaseError) {
+            }
 
-           }
+            @Override
+            public void onCancelled (DatabaseError databaseError) {
+
+            }
         });
 
 
@@ -125,6 +141,5 @@ public class ChoreList extends AppCompatActivity
                 startActivity(addChoreIntent);
             }
         });
-
     }
 }
