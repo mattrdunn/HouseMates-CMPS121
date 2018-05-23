@@ -21,23 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/join_house_button"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Join House"
-        android:textColor="@android:color/background_light"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <EditText
         android:id="@+id/join_house_password"
         android:layout_width="275dp"
@@ -56,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/join_house_name" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/join_house_button"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -71,5 +54,6 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
