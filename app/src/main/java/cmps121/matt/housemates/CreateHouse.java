@@ -4,17 +4,24 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CreateHouse extends AppCompatActivity
 {
+    private static final String TAG = "CreateHouse";
+    View focusView = null;
 
     private EditText houseNameInput, housePasswordInput;
 
@@ -48,21 +55,97 @@ public class CreateHouse extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                // Get info from edittexts
-                String houseName = houseNameInput.getText().toString();
-                String housePassword = housePasswordInput.getText().toString();
-
-                addToDatabase(houseName,housePassword);
-
-                // Quick fix for now, we're making pushing another activity on the stack on top
-                // of the rest instead of finishing activities b/c it won't refresh currrently
-                //TODO: Pass the houseName to the MyHouses intent
-                Intent intent = new Intent(CreateHouse.this,MyHouses.class );
-                startActivity(intent);
+                authenticateHouse();
             }
         });
 
     }
+
+    public void authenticateHouse()
+    {
+        // Retrieve info from edit texts
+        final String houseName = houseNameInput.getText().toString();
+        final String housePassword = housePasswordInput.getText().toString();
+
+
+
+        if(badHouseName(houseName))
+        {
+            return;
+        }
+        else if(badPassword(housePassword))
+        {
+            return;
+        }
+        else
+        {
+            houseRef.addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    // Counter to iterate through all the childs in classes
+                    int counter = 1;
+                    for (DataSnapshot data : dataSnapshot.getChildren())
+                    {
+                        // gets all classcodes inside class child
+                        String classKeys = data.getKey();
+                        if (classKeys.equals(houseName))
+                        {
+                            DatabaseReference userKeyDatabase = houseRef.child(classKeys);
+
+                            ValueEventListener eventListener = new ValueEventListener()
+                            {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot)
+                                {
+                                    if(dataSnapshot.getKey().equals(houseName))
+                                    {
+                                        houseNameInput.setError("This house name already exists");
+                                        houseNameInput.requestFocus();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError)
+                                {
+
+                                }
+                            };
+                            userKeyDatabase.addListenerForSingleValueEvent(eventListener);
+
+
+                        }
+                        else
+                        {
+
+                            // This counter checking every child for duplicate house names
+                            if(counter >= dataSnapshot.getChildrenCount())
+                            {
+                                addToDatabase(houseName,housePassword);
+                                Log.d(TAG, "House name doesn't exist, so this works");
+
+                                // Quick fix for now, we're making pushing another activity on the stack on top
+                                // of the rest instead of finishing activities b/c it won't refresh currently
+                                //TODO: Pass the houseName to the MyHouses intent, just wondering but who wrote this?
+                                Intent intent = new Intent(CreateHouse.this,MyHouses.class );
+                                startActivity(intent);
+                            }
+                            counter++;
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+
+                }
+            });
+        }
+
+    }
+
+
 
     private void addToDatabase(String houseName, String housePassword)
     {
@@ -78,4 +161,40 @@ public class CreateHouse extends AppCompatActivity
         // Also push the housename into the user
         databaseRef.child("users").child(mFirebaseUser.getUid()).child("Joined Houses").child(houseName).setValue(houseName);
     }
+
+    //----------------------------------------------------------------------------------------------
+    // boolean helper functions that check for valid inputs
+    //----------------------------------------------------------------------------------------------
+
+
+    // Checks password if its empty
+    public boolean badPassword(String password)
+    {
+        if(password.isEmpty())
+        {
+            Log.d(TAG, "THE PASSWORD IS EMPTY");
+            housePasswordInput.setError(getString(R.string.error_field_required));
+            focusView = housePasswordInput;
+            focusView.requestFocus();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    // Returns true if the name is bad; otherwise, return false
+    public boolean badHouseName(String name)
+    {
+        if(name.isEmpty())
+        {
+            Log.d(TAG, "THE HOUSENAME IS EMPTY");
+            houseNameInput.setError(getString(R.string.error_field_required));
+            focusView = houseNameInput;
+            focusView.requestFocus();
+            return true;
+        }
+        else
+            return false;
+    }
+
 }
