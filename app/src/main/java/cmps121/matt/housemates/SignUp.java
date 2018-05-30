@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -106,6 +107,14 @@ public class SignUp extends AppCompatActivity {
                             else
                             {
                                 FirebaseUser user = auth.getCurrentUser();
+                                if (user != null)
+                                {
+                                    Log.d(TAG, "The fullname is " + name);
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(name)
+                                            .build();
+                                    user.updateProfile(profileUpdates);
+                                }
                                 databaseRef.child("users").child(user.getUid()).setValue(userInfo);
                                 startActivity(new Intent(SignUp.this, SplashScreen.class));
                                 finish();
