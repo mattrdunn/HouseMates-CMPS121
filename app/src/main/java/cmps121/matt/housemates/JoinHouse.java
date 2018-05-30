@@ -11,10 +11,14 @@ import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class JoinHouse extends AppCompatActivity {
+public class JoinHouse extends AppCompatActivity
+{
 
     EditText houseNameInput;
     EditText housePasswordInput;
@@ -26,7 +30,8 @@ public class JoinHouse extends AppCompatActivity {
     private View focusView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_house);
 
@@ -54,15 +59,96 @@ public class JoinHouse extends AppCompatActivity {
         });
     }
 
-    // BAREBONES VERSION TODO: actually do everything in the description
     // This method will validate the literal inputs, then run Firebase checks to make sure it's valid.
     // It will then call addUserToHouse() to add the user to the house.
+    // TODO: Still need to notify if you already joined the house
     public void checkValidHouse()
     {
         final String houseName = houseNameInput.getText().toString().trim();
         final String housePassword = housePasswordInput.getText().toString().trim();
-        addUserToHouse(houseName);
-        startNext(houseName);
+
+        // Initial checks for the edit texts fields
+        if (badName(houseName))
+        {
+            return;
+        }
+        else if (badPassword(housePassword))
+        {
+            return;
+        }
+        else
+        {
+
+            houseRef.addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+
+                    // Counter to iterate through all the childs in houses
+                    int counter = 1;
+                    for (DataSnapshot data : dataSnapshot.getChildren())
+                    {
+                        // gets all houses inside class child
+                        String classKeys = data.getKey();
+                        if (classKeys.equals(houseName))
+                        {
+                            DatabaseReference userKeyDatabase = houseRef.child(classKeys);
+
+                            ValueEventListener eventListener = new ValueEventListener()
+                            {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot)
+                                {
+                                    if (dataSnapshot.getKey().equals(houseName))
+                                    {
+                                        Log.d("Get Key", dataSnapshot.getKey().toString());
+                                        String housePass = dataSnapshot.child("housePassword").getValue().toString();
+
+                                        if (housePass.equals(housePassword))
+                                        {
+                                            // Add user normally without any problems
+                                            addUserToHouse(houseName);
+                                            startNext(houseName);
+                                        }
+                                        else
+                                        {
+                                            housePasswordInput.setError("The entered password was incorrect");
+                                            housePasswordInput.requestFocus();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            };
+                            userKeyDatabase.addListenerForSingleValueEvent(eventListener);
+                        }
+                        else
+                        {
+
+                            // This counter checking every child if this house even exists
+                            if (counter >= dataSnapshot.getChildrenCount())
+                            {
+
+                                houseNameInput.setError("This house name does not exist");
+                                houseNameInput.requestFocus();
+
+                                Log.d("Invalid House Name: ", houseName);
+                            }
+                            counter++;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     // Method that will save the user to the list of members in this house, and
@@ -76,7 +162,28 @@ public class JoinHouse extends AppCompatActivity {
         databaseRef.child("users").child(mFirebaseUser.getUid()).child("Joined Houses").child(houseName).setValue(houseName);
     }
 
-    // Returns true if the name is bad; otherwise, return false
+    //----------------------------------------------------------------------------------------------
+    // boolean helper functions that check for valid inputs
+    //----------------------------------------------------------------------------------------------
+
+
+    // Checks password if its empty
+    public boolean badPassword(String password)
+    {
+        if(password.isEmpty())
+        {
+            Log.d(TAG, "THE PASSWORD IS EMPTY");
+            housePasswordInput.setError(getString(R.string.error_field_required));
+            focusView = housePasswordInput;
+            focusView.requestFocus();
+            return true;
+        }
+        else
+            return false;
+    }
+
+
+    // Returns true if the house name is bad; otherwise, return false
     public boolean badName(String houseName)
     {
         if(houseName.isEmpty())

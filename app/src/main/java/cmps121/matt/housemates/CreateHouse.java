@@ -84,11 +84,11 @@ public class CreateHouse extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    // Counter to iterate through all the childs in classes
+                    // Counter to iterate through all the childs in houses
                     int counter = 1;
                     for (DataSnapshot data : dataSnapshot.getChildren())
                     {
-                        // gets all classcodes inside class child
+                        // gets all house names inside house child
                         String classKeys = data.getKey();
                         if (classKeys.equals(houseName))
                         {
