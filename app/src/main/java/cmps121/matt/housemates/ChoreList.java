@@ -83,7 +83,10 @@ public class ChoreList extends AppCompatActivity {
                     String choreName = ds.child("choreName").getValue().toString();
                     String choreDescription = ds.child("choreDescription").getValue().toString();
                     String assignee = ds.child("assignee").getValue().toString();
-                    AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee);
+                    String dateCreated = ds.child("dateCreated").getValue().toString();
+                    String dueDate = ds.child("dueDate").getValue().toString();
+
+                    AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee, dateCreated, dueDate);
 
                     list.add(chore);
                 }
@@ -121,10 +124,13 @@ public class ChoreList extends AppCompatActivity {
                 intent.putExtra("choreName", selected.choreName);
                 intent.putExtra("choreDescription", selected.choreDescription);
                 intent.putExtra("assignee", selected.assignee);
+                intent.putExtra("dateCreated", selected.dateCreated);
+                intent.putExtra("dueDate", selected.dueDate);
 
                 startActivity(intent);
             }
         });
+
 
         //Add a button listener for the add chore button
         Button addChore = (Button) findViewById(R.id.addChore);
@@ -135,7 +141,7 @@ public class ChoreList extends AppCompatActivity {
             {
                 // Create an Intent to reference the addChore activity, passing in the name of the house
                 Intent addChoreIntent = new Intent(ChoreList.this, AddChore.class);
-
+                Log.d(TAG, "H-H-H-House Name == " + houseName);
                 // Pass the houseName to the new Intent
                 addChoreIntent.putExtra("houseName", houseName);
                 startActivity(addChoreIntent);

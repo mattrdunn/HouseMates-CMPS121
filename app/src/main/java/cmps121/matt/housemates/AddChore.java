@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class AddChore extends AppCompatActivity {
     private static final String TAG = "Chores";
@@ -98,8 +100,6 @@ public class AddChore extends AppCompatActivity {
                                     assigneeChoices.add(name);
                                     Log.d(TAG, "assigneeChoices = " + assigneeChoices.toString());
 
-
-
                                 }
 
                             }
@@ -136,6 +136,7 @@ public class AddChore extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Get info from user-inputted fields
+                //TODO: check input fields for periods, #, [, and ] because firebase doesn't like them
                 String choreName = choreNameText.getText().toString();
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
@@ -150,7 +151,9 @@ public class AddChore extends AppCompatActivity {
 
     private void addToDatabase(String choreName, String choreDescription, String assignee) {
         //Create chore info class
-        AddChoreInformation choreInfo = new AddChoreInformation (choreName, choreDescription, assignee);
+        String dateCreated = getCurrentDay();
+        String dueDate = "placeholder";
+        AddChoreInformation choreInfo = new AddChoreInformation (choreName, choreDescription, assignee, dateCreated, dueDate);
 
         //add the new chore to the houseName child
         //TODO: Currently, this stores it under the name of the chore. This could lead to issues when trying to retrieve chores bc the chore name may not be unique, prob want to implement a unique id
@@ -158,5 +161,19 @@ public class AddChore extends AppCompatActivity {
         houseRef.child(houseName).child("Chores").child(choreName).setValue(choreInfo);
     }
 
+    // Gets the current date for the dateCreated variable
+    // Returns string of current day
+    public String getCurrentDay() {
+        Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
+        int dd = localCalendar.get(Calendar.DATE);
+        int mm = localCalendar.get(Calendar.MONTH) + 1;
+        int yyyy = localCalendar.get(Calendar.YEAR);
 
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(mm + "-");
+        stringBuilder.append(dd + "-");
+        stringBuilder.append(yyyy);
+        //TODO: add logic for due date. Have to add field in the layout for it, either calendar view or whatever.
+        return stringBuilder.toString();
+    }
 }

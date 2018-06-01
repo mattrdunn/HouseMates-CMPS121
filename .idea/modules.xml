@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HouseMates-CMPS121.iml" filepath="$PROJECT_DIR$/HouseMates-CMPS121.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Housemates.iml" filepath="$PROJECT_DIR$/Housemates.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HouseMates.iml" filepath="$PROJECT_DIR$/HouseMates.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

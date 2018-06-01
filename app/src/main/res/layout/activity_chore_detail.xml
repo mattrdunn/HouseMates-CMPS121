@@ -8,84 +8,91 @@
 
     <TextView
         android:id="@+id/chore_title"
-        android:layout_width="234dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="364dp"
+        android:layout_height="83dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Chore Name"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/time_view"
-        android:layout_width="142dp"
-        android:layout_height="39dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="116dp"
-        android:text="Time Constraint:"
-        android:textSize="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/date_view"
-        android:layout_width="142dp"
-        android:layout_height="39dp"
+        android:layout_width="298dp"
+        android:layout_height="31dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:text="Date:"
+        android:text="Created "
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_view" />
+        app:layout_constraintTop_toBottomOf="@+id/chore_title" />
 
     <TextView
-        android:id="@+id/person_view"
-        android:layout_width="153dp"
-        android:layout_height="39dp"
+        android:id="@+id/time_view"
+        android:layout_width="302dp"
+        android:layout_height="33dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:text="Task Assigned To:"
+        android:text="Finish by "
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_view" />
 
     <TextView
-        android:id="@+id/detail_view"
+        android:id="@+id/assignee_detail"
         android:layout_width="153dp"
-        android:layout_height="39dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Task Assigned To:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_view" />
+
+    <TextView
+        android:id="@+id/detail_view"
+        android:layout_width="153dp"
+        android:layout_height="28dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:textColor="@color/colorPrimaryDark"
         android:text="Task Details:"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/person_view" />
+        app:layout_constraintTop_toBottomOf="@+id/person_detail" />
 
     <TextView
-        android:id="@+id/assignee_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
+        android:id="@+id/person_detail"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/colorPrimaryDark"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/person_view"
-        app:layout_constraintStart_toEndOf="@+id/person_view" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assignee_detail" />
 
     <TextView
-        android:id="@+id/description_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
+        android:id="@+id/descrption_detail"
+        android:layout_width="347dp"
+        android:layout_height="126dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="TextView"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/detail_view"
-        app:layout_constraintStart_toEndOf="@+id/detail_view" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_view" />
 
 </android.support.constraint.ConstraintLayout>
