@@ -1,8 +1,14 @@
 package cmps121.matt.housemates;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static cmps121.matt.housemates.SplashScreen.CHANNEL_ID;
+
 public class MyHouses extends AppCompatActivity
 {
 
@@ -36,11 +44,25 @@ public class MyHouses extends AppCompatActivity
     private ArrayAdapter<String> aa;
     private ListView listView;
 
+    //notification stuff
+    int notificationID = 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_houses);
+
+        //NOTIFICATION STUFF
+
+        Button notification_button = (Button) findViewById(R.id.notify);
+        notification_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                addNotification();
+            }
+        });
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
@@ -164,6 +186,31 @@ public class MyHouses extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         Log.d(TAG, "Going to log in view activity");
+    }
+
+    private void addNotification() {
+
+        //eventually, this should take us to choreDetail of the specific chore we are being notified of
+        //currently, just dummy data being passed in
+        Intent intent = new Intent (this, ChoreDetail.class);
+        intent.putExtra("choreName", "Chore name");
+        intent.putExtra("choreDescription", "Chore description");
+        intent.putExtra("assignee", "A");
+        intent.putExtra("dateCreated", "Date created");
+        intent.putExtra("dueDate", "Date due");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        mBuilder.setSmallIcon(R.drawable.ic_launcher_round);
+        mBuilder.setContentTitle("You have a new notification");
+        mBuilder.setContentText("Notification description");
+        mBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notificationID, mBuilder.build());
     }
 
 }

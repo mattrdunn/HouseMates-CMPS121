@@ -3,6 +3,7 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
+    <string name="CHANNEL_ID">com.example.cassiarta.notifications.ANDROID</string>
 
     <string name="error_invalid_email">Email is invalid</string>
     <string name="error_field_required">This field is required</string>
