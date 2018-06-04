@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -126,26 +128,62 @@ public class ChoreList extends AppCompatActivity {
                 intent.putExtra("assignee", selected.assignee);
                 intent.putExtra("dateCreated", selected.dateCreated);
                 intent.putExtra("dueDate", selected.dueDate);
+                intent.putExtra("houseName", houseName);
 
                 startActivity(intent);
             }
         });
 
 
-        //Add a button listener for the add chore button
-        Button addChore = (Button) findViewById(R.id.addChore);
-        addChore.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                // Create an Intent to reference the addChore activity, passing in the name of the house
-                Intent addChoreIntent = new Intent(ChoreList.this, AddChore.class);
-                Log.d(TAG, "H-H-H-House Name == " + houseName);
-                // Pass the houseName to the new Intent
-                addChoreIntent.putExtra("houseName", houseName);
-                startActivity(addChoreIntent);
-            }
-        });
+//        //Add a button listener for the add chore button
+//        Button addChore = (Button) findViewById(R.id.addChore);
+//        addChore.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//                // Create an Intent to reference the addChore activity, passing in the name of the house
+//                Intent addChoreIntent = new Intent(ChoreList.this, AddChore.class);
+//                Log.d(TAG, "H-H-H-House Name == " + houseName);
+//                // Pass the houseName to the new Intent
+//                addChoreIntent.putExtra("houseName", houseName);
+//                startActivity(addChoreIntent);
+//            }
+//        });
     }
+
+    public void addChore()
+    {
+        Intent addChoreIntent = new Intent(ChoreList.this, AddChore.class);
+        Log.d(TAG, "H-H-H-House Name == " + houseName);
+        // Pass the houseName to the new Intent
+        addChoreIntent.putExtra("houseName", houseName);
+        startActivity(addChoreIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_chore_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.addchore)
+        {
+            addChore();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
