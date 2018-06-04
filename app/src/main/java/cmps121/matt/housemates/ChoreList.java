@@ -206,6 +206,8 @@ public class ChoreList extends AppCompatActivity
         houseRef.child(houseName).removeValue();
         mCurrentUserRef.child("Joined Houses").child(houseName).removeValue();
 
+        // TODO: Delete all users in that house in the user side of the DB
+
         startActivity(choreIntent);
     }
 
