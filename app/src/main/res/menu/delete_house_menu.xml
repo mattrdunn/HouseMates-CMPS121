@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/addchore"
+        android:id="@+id/deletehouse"
         android:orderInCategory="100"
-        android:title="Add Chore"
+        android:title="Delete House"
         android:color="@android:color/background_light"
         app:showAsAction="always" />
 </menu>

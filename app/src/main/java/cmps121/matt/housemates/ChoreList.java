@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,13 +23,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ChoreList extends AppCompatActivity {
+public class ChoreList extends AppCompatActivity
+{
 
     private static final String TAG = "ChoreList";
     private DatabaseReference databaseRef;
     private DatabaseReference houseRef;
     private DatabaseReference currHouseRef;
     private DatabaseReference choresRef;
+    private DatabaseReference userRef;
+    private DatabaseReference mCurrentUserRef;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
     private String houseName;
     private ListView listView;
     private ArrayAdapter<String> aa;
@@ -69,6 +76,13 @@ public class ChoreList extends AppCompatActivity {
 
         //create reference to the housemates of this current house
         choresRef = currHouseRef.child("Chores");
+
+        // User side of the DB reference
+        userRef = databaseRef.child("users");
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
+        mCurrentUserRef = userRef.child(mFirebaseUser.getUid()); //gives a reference to the current user's children.
+
 
         //The list that will contain the chores
         final ArrayList <AddChoreInformation> list = new ArrayList<AddChoreInformation>();
@@ -135,21 +149,16 @@ public class ChoreList extends AppCompatActivity {
         });
 
 
-//        //Add a button listener for the add chore button
-//        Button addChore = (Button) findViewById(R.id.addChore);
-//        addChore.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                // Create an Intent to reference the addChore activity, passing in the name of the house
-//                Intent addChoreIntent = new Intent(ChoreList.this, AddChore.class);
-//                Log.d(TAG, "H-H-H-House Name == " + houseName);
-//                // Pass the houseName to the new Intent
-//                addChoreIntent.putExtra("houseName", houseName);
-//                startActivity(addChoreIntent);
-//            }
-//        });
+        //Add a button listener for the add chore button
+        final Button addChore = (Button) findViewById(R.id.add_chore);
+        addChore.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                addChore();
+            }
+        });
     }
 
     public void addChore()
@@ -165,7 +174,7 @@ public class ChoreList extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_chore_menu, menu);
+        getMenuInflater().inflate(R.menu.delete_house_menu, menu);
         return true;
     }
 
@@ -178,12 +187,26 @@ public class ChoreList extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.addchore)
+        if (id == R.id.deletehouse)
         {
-            addChore();
+            deleteHouse();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // delete house from DB
+    public void deleteHouse()
+    {
+
+        // Create an Intent to reference the MyHouse activity
+        Intent choreIntent = new Intent(ChoreList.this, MyHouses.class);
+
+        // Remove from house & user sides of the DB
+        houseRef.child(houseName).removeValue();
+        mCurrentUserRef.child("Joined Houses").child(houseName).removeValue();
+
+        startActivity(choreIntent);
     }
 
 }

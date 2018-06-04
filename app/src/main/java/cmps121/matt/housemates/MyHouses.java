@@ -31,6 +31,7 @@ public class MyHouses extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
+    private DatabaseReference houseRef;
     private DatabaseReference mUsersRef;
     private DatabaseReference mCurrentUserRef;
     private ArrayAdapter<String> aa;
@@ -46,6 +47,7 @@ public class MyHouses extends AppCompatActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
         mDatabase = FirebaseDatabase.getInstance().getReference(); // main database reference
         mUsersRef = mDatabase.child("users");                      // reference to the users child
+        houseRef = mDatabase.child("houses");
         mCurrentUserRef = mUsersRef.child(mFirebaseUser.getUid()); //gives a reference to the current user's children.
 
         // The list that will contain the user's list of houses
@@ -165,5 +167,6 @@ public class MyHouses extends AppCompatActivity
         startActivity(intent);
         Log.d(TAG, "Going to log in view activity");
     }
+
 
 }
