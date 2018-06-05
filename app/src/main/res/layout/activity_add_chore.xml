@@ -6,10 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".AddChore">
 
+    <Spinner
+        android:id="@+id/year_spinner"
+        android:layout_width="119dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/day_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/duedate" />
+
     <EditText
         android:id="@+id/choreName"
-        android:layout_width="220dp"
-        android:layout_height="47dp"
+        android:layout_width="335dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="1dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="64dp"
@@ -23,11 +36,11 @@
 
     <EditText
         android:id="@+id/choreDescription"
-        android:layout_width="220dp"
+        android:layout_width="335dp"
         android:layout_height="45dp"
         android:layout_marginLeft="1dp"
         android:layout_marginStart="1dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Description"
         android:inputType="text"
@@ -37,32 +50,75 @@
 
     <Spinner
         android:id="@+id/assigneeSpinner"
-        android:layout_width="220dp"
+        android:layout_width="335dp"
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/choreDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/assignee" />
 
     <Button
         android:id="@+id/addChore"
-        android:layout_width="220dp"
+        android:layout_width="335dp"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@android:color/background_light"
         android:background="@color/colorPrimaryDark"
         android:text="Add Chore"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/month_spinner"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duedate" />
+
+    <Spinner
+        android:id="@+id/day_spinner"
+        android:layout_width="102dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/month_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/duedate" />
+
+    <TextView
+        android:id="@+id/assignee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Assignee:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choreDescription" />
+
+    <TextView
+        android:id="@+id/duedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Due Date:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/assigneeSpinner" />
 </android.support.constraint.ConstraintLayout>

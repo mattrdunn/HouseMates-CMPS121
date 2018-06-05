@@ -2,13 +2,10 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <item
-        android:id="@+id/action_logout"
+        android:id="@+id/deletehouse"
         android:orderInCategory="100"
-        android:icon="@drawable/log_out"
+        android:title="Delete House"
         android:color="@android:color/background_light"
-        android:title="Log Out"
         app:showAsAction="always" />
-
 </menu>

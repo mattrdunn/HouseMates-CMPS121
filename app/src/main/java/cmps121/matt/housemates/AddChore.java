@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +27,7 @@ public class AddChore extends AppCompatActivity {
     private static final String TAG = "Chores";
     private EditText choreNameText, choreDescriptionText;
     private Spinner assigneeSpinner;
+    private Spinner monthSpinner, daySpinner, yearSpinner;
     View focusView = null;
     private DatabaseReference databaseRef;
     private DatabaseReference houseRef;
@@ -43,6 +45,64 @@ public class AddChore extends AppCompatActivity {
         choreNameText = (EditText) findViewById(R.id.choreName);
         choreDescriptionText = (EditText) findViewById(R.id.choreDescription);
         assigneeSpinner = (Spinner)findViewById(R.id.assigneeSpinner);
+        monthSpinner = (Spinner)findViewById(R.id.month_spinner);
+        daySpinner = (Spinner)findViewById(R.id.day_spinner);
+        yearSpinner = (Spinner)findViewById(R.id.year_spinner);
+
+        Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
+        int m = localCalendar.get(Calendar.MONTH);
+        int d = localCalendar.get(Calendar.DATE) - 1;
+        int yyyy = localCalendar.get(Calendar.YEAR);
+        Log.d(TAG, "MONTH == "+m);
+        Log.d(TAG, "DAY == "+d);
+
+        //will hold values 1 to 12 for each month
+        final ArrayList<String> monthEntries = new ArrayList<String>();
+        for(int i = 1; i <= 12; i++)
+        {
+            String ii = ""+i;
+            monthEntries.add(ii);
+        }
+
+        //will hold values 1 to 31 for each day
+        final ArrayList<String> dayEntries = new ArrayList<String>();
+        for(int i = 1; i <= 31; i++)
+        {
+            String ii = ""+i;
+            dayEntries.add(ii);
+        }
+
+        //will hold values 1 to 31 for each day
+        final ArrayList<String> yearEntries = new ArrayList<String>();
+        for(int i = yyyy; i <= yyyy+10; i++)
+        {
+            String ii = ""+i;
+            yearEntries.add(ii);
+        }
+
+
+        // set all the spinners to hold the numbers
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(AddChore.this,
+                android.R.layout.simple_spinner_item,
+                monthEntries);
+        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        monthSpinner.setAdapter(monthAdapter);
+        monthSpinner.setSelection(m);
+
+        ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(AddChore.this,
+                android.R.layout.simple_spinner_item,
+                dayEntries);
+        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        daySpinner.setAdapter(dayAdapter);
+        daySpinner.setSelection(d);
+
+        ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(AddChore.this,
+                android.R.layout.simple_spinner_item,
+                yearEntries);
+        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        yearSpinner.setAdapter(yearAdapter);
+
+
 
         //creates a reference to the entire DB
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -128,8 +188,6 @@ public class AddChore extends AppCompatActivity {
         });
 
 
-
-
         //When this button is pressed, add the chore to the database
         Button addChoreButton = (Button) findViewById(R.id.addChore);
         addChoreButton.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +199,12 @@ public class AddChore extends AppCompatActivity {
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
 
+                if(!isValidDueDate())
+                {
+                    Toast.makeText(getApplicationContext(), "The due date is invalid", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 addToDatabase(choreName, choreDescription, assignee);
                 finish();
 
@@ -149,7 +213,8 @@ public class AddChore extends AppCompatActivity {
 
     }
 
-    private void addToDatabase(String choreName, String choreDescription, String assignee) {
+    private void addToDatabase(String choreName, String choreDescription, String assignee)
+    {
         //Create chore info class
         String dateCreated = getCurrentDay();
         String dueDate = "placeholder";
@@ -163,7 +228,8 @@ public class AddChore extends AppCompatActivity {
 
     // Gets the current date for the dateCreated variable
     // Returns string of current day
-    public String getCurrentDay() {
+    public String getCurrentDay()
+    {
         Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
         int dd = localCalendar.get(Calendar.DATE);
         int mm = localCalendar.get(Calendar.MONTH) + 1;
@@ -175,5 +241,18 @@ public class AddChore extends AppCompatActivity {
         stringBuilder.append(yyyy);
         //TODO: add logic for due date. Have to add field in the layout for it, either calendar view or whatever.
         return stringBuilder.toString();
+    }
+
+    public boolean isValidDueDate()
+    {
+        String monthInput = monthSpinner.getSelectedItem().toString();
+        String dayInput = daySpinner.getSelectedItem().toString();
+        String yearInput = yearSpinner.getSelectedItem().toString();
+        Log.d(TAG, "MONTH INPUT === " + monthInput);
+        Log.d(TAG, "DAY INPUT === " + dayInput);
+        Log.d(TAG, "YEAR INPUT === " + yearInput);
+
+        //TODO: actually finish the checks for the due date input and then save the due date into the database
+        return true;
     }
 }
