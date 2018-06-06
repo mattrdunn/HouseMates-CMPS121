@@ -130,7 +130,7 @@ public class AddChore extends AppCompatActivity {
         //For every user in houses>"housemates", match that housemate's ID with the corresponding
         //name under that ID's key in Users
 
-        housematesRef.addValueEventListener (new ValueEventListener () {
+        housematesRef.addListenerForSingleValueEvent (new ValueEventListener () {
             @Override
             public void onDataChange (DataSnapshot dataSnapshot) {
 
