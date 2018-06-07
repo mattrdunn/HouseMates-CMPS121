@@ -5,8 +5,9 @@
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
-    android:paddingLeft="15dp"
+    android:padding="12dp"
     android:hint="house"
-    android:textColor="@color/colorPrimary"
+    android:textColor="@color/colorPrimaryDark"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    android:textSize="28sp"/>
+    android:background="@drawable/list_item_selector"
+    android:textSize="18sp"/>

@@ -16,14 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUp" />
-        <activity android:name=".AddChore"></activity>
-        <activity android:name=".MyHouses" />
-        <activity android:name=".ChoreList" />
-        <activity android:name=".ChoreDetail" />
-        <activity android:name=".SignIn" />
-        <activity android:name=".CreateHouse" />
-        <activity android:name=".JoinHouse"></activity>
+        <activity android:name=".SignUp"
+                  android:label="Sign Up"/>
+        <activity android:name=".AddChore"
+                  android:label="Add Chore"/>
+        <activity android:name=".MyHouses"
+                  android:label="My Houses"/>
+        <activity android:name=".ChoreList"
+                  android:label="All Chores"/>
+        <activity android:name=".ChoreDetail"
+                  android:label="Chore Detail"/>
+        <activity android:name=".SignIn"
+                  android:label="Sign In"/>
+        <activity android:name=".CreateHouse"
+                  android:label="Create New House"/>
+        <activity android:name=".JoinHouse"
+                  android:label="Join House"/>
     </application>
 
 </manifest>
