@@ -53,7 +53,7 @@ public class ChoreDetail extends AppCompatActivity
         dateCreatedView.setText("Created " + dateCreated);
         dueDateView.setText("Finish by " + dueDate);
         description.setText(choreDescription);
-        assignee.setText("Assignee: " +choreAssignee);
+        assignee.setText(choreAssignee);
     }
 
 

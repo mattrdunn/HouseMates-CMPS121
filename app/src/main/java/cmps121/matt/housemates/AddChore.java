@@ -35,6 +35,7 @@ public class AddChore extends AppCompatActivity {
     private DatabaseReference housematesRef;
     private DatabaseReference usersRef;
     private String houseName;
+    private int monthInt, dayInt, yearInt;
 
 
     @Override
@@ -199,15 +200,15 @@ public class AddChore extends AppCompatActivity {
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
 
+                // this call will set the values monthInt, dayInt, and yearInt for the due date
+                // if the entered due date is invalid for any reason, display toast error and return.
                 if(!isValidDueDate())
                 {
-                    Toast.makeText(getApplicationContext(), "The due date is invalid", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 addToDatabase(choreName, choreDescription, assignee);
                 finish();
-
             }
         });
 
@@ -217,7 +218,7 @@ public class AddChore extends AppCompatActivity {
     {
         //Create chore info class
         String dateCreated = getCurrentDay();
-        String dueDate = "placeholder";
+        String dueDate = buildDueDate(monthInt, dayInt, yearInt);
         AddChoreInformation choreInfo = new AddChoreInformation (choreName, choreDescription, assignee, dateCreated, dueDate);
 
         //add the new chore to the houseName child
@@ -239,20 +240,134 @@ public class AddChore extends AppCompatActivity {
         stringBuilder.append(mm + "-");
         stringBuilder.append(dd + "-");
         stringBuilder.append(yyyy);
-        //TODO: add logic for due date. Have to add field in the layout for it, either calendar view or whatever.
+
+        return stringBuilder.toString();
+    }
+
+    public String buildDueDate(int mm, int dd, int yyyy)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(mm + "-");
+        stringBuilder.append(dd + "-");
+        stringBuilder.append(yyyy);
+
         return stringBuilder.toString();
     }
 
     public boolean isValidDueDate()
     {
         String monthInput = monthSpinner.getSelectedItem().toString();
+        monthInt = Integer.parseInt(monthInput);
         String dayInput = daySpinner.getSelectedItem().toString();
+        dayInt = Integer.parseInt(dayInput);
         String yearInput = yearSpinner.getSelectedItem().toString();
-        Log.d(TAG, "MONTH INPUT === " + monthInput);
-        Log.d(TAG, "DAY INPUT === " + dayInput);
-        Log.d(TAG, "YEAR INPUT === " + yearInput);
+        yearInt = Integer.parseInt(yearInput);
+        Log.d(TAG, "MONTH INPUT === " + monthInt);
+        Log.d(TAG, "DAY INPUT === " + dayInt);
+        Log.d(TAG, "YEAR INPUT === " + yearInt);
+
+        //get current date values
+        Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
+        int m = localCalendar.get(Calendar.MONTH)+1;
+        int d = localCalendar.get(Calendar.DATE);
+        int y = localCalendar.get(Calendar.YEAR);
+
+        Log.d(TAG, "ACUTAL MONTH === " + m);
+        Log.d(TAG, "ACTUAL DAY === " + d);
+        Log.d(TAG, "ACTUAL YEAR === " + y);
 
         //TODO: actually finish the checks for the due date input and then save the due date into the database
+        // If it's February
+        if(monthInt == 2)
+        {
+            // if invalid February date and accounts for leap year!!
+            if(isLeapYear(yearInt))
+            {
+                if(dayInt > 29)
+                {
+                    Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+            else
+            {
+                if (dayInt > 28) {
+                    Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+
+        // if it's April
+        if(monthInt == 4)
+        {
+            // if invalid date
+            if(dayInt > 30)
+            {
+                Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        // if it's June
+        if(monthInt == 6)
+        {
+            // if invalid date
+            if(dayInt > 30)
+            {
+                Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        // if it's September
+        if(monthInt == 9)
+        {
+            // if invalid date
+            if(dayInt > 30)
+            {
+                Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        // if it's November
+        if(monthInt == 11)
+        {
+            // if invalid date
+            if(dayInt > 30)
+            {
+                Toast.makeText(getApplicationContext(), "The due date entered is invalid", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        //check if date entered is earlier than today
+        else if(Integer.parseInt(yearInput) == y)
+        {
+            if(monthInt < m)
+            {
+                Toast.makeText(getApplicationContext(), "Cannot set the due date in the past", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if(monthInt == m)
+            {
+                if(dayInt < d)
+                {
+                    Toast.makeText(getApplicationContext(), "Cannot set the due date in the past", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+
         return true;
+    }
+
+    // returns true if it's a leap year
+    public static boolean isLeapYear(int year)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        return cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
     }
 }
