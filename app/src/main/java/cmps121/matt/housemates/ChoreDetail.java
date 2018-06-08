@@ -46,7 +46,7 @@ public class ChoreDetail extends AppCompatActivity
         TextView title = (TextView) findViewById(R.id.chore_title);
         TextView dateCreatedView = (TextView) findViewById(R.id.date_view);
         TextView dueDateView = (TextView) findViewById(R.id.time_view);
-        TextView description = (TextView) findViewById(R.id.descrption_detail);
+        TextView description = (TextView) findViewById(R.id.description_detail);
         TextView assignee = (TextView) findViewById(R.id.person_detail);
 
         title.setText(choreName);
