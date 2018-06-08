@@ -40,6 +40,8 @@ public class MyHouses extends AppCompatActivity
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
     private DatabaseReference houseRef;
+    private DatabaseReference housematesRef;
+    private DatabaseReference currHouseRef;
     private DatabaseReference mUsersRef;
     private DatabaseReference mCurrentUserRef;
     private ArrayAdapter<String> aa;
@@ -70,6 +72,7 @@ public class MyHouses extends AppCompatActivity
         mDatabase = FirebaseDatabase.getInstance().getReference(); // main database reference
         mUsersRef = mDatabase.child("users");                      // reference to the users child
         houseRef = mDatabase.child("houses");
+
         mCurrentUserRef = mUsersRef.child(mFirebaseUser.getUid()); //gives a reference to the current user's children.
 
         // The list that will contain the user's list of houses
@@ -190,7 +193,8 @@ public class MyHouses extends AppCompatActivity
         Log.d(TAG, "Going to log in view activity");
     }
 
-    private void addNotification() {
+    private void addNotification()
+    {
 
         //eventually, this should take us to choreDetail of the specific chore we are being notified of
         //currently, just dummy data being passed in
@@ -214,4 +218,5 @@ public class MyHouses extends AppCompatActivity
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationID, mBuilder.build());
     }
+
 }

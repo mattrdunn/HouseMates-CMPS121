@@ -31,6 +31,7 @@ public class ChoreList extends AppCompatActivity
     private DatabaseReference houseRef;
     private DatabaseReference currHouseRef;
     private DatabaseReference choresRef;
+    private DatabaseReference housematesRef;
     private DatabaseReference userRef;
     private DatabaseReference mCurrentUserRef;
     private FirebaseAuth mFirebaseAuth;
@@ -38,6 +39,7 @@ public class ChoreList extends AppCompatActivity
     private String houseName;
     private ListView listView;
     private ArrayAdapter<String> aa;
+    private ArrayList<String> memberList;
 
 
     @Override
@@ -45,7 +47,12 @@ public class ChoreList extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chore_list);
+
+        // necessary for deletion of people that are enrolled in their house
+        memberList = new ArrayList<String>();
+
         refreshListView();
+        getHouseMates();
 
     }
 
@@ -76,6 +83,9 @@ public class ChoreList extends AppCompatActivity
 
         //create reference to the housemates of this current house
         choresRef = currHouseRef.child("Chores");
+
+        // Housemates reference for deleting houses
+        housematesRef = currHouseRef.child("Housemates");
 
         // User side of the DB reference
         userRef = databaseRef.child("users");
@@ -201,14 +211,43 @@ public class ChoreList extends AppCompatActivity
 
         // Create an Intent to reference the MyHouse activity
         Intent choreIntent = new Intent(ChoreList.this, MyHouses.class);
-
-        // Remove from house & user sides of the DB
+        // Remove from house sides of the DB
         houseRef.child(houseName).removeValue();
-        mCurrentUserRef.child("Joined Houses").child(houseName).removeValue();
 
-        // TODO: Delete all users in that house in the user side of the DB
+        // Unenroll every member of the house from their respective listviews in the user side of DB
+        for(int i = 0; i < memberList.size(); i++)
+        {
+            userRef.child(memberList.get(i)).child("Joined Houses").child(houseName).removeValue();
+        }
 
         startActivity(choreIntent);
+    }
+
+    // populates the list of people existing in the house
+    public void getHouseMates()
+    {
+        housematesRef.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for(DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    // Reference to the name child in users
+                    String nameRef = ds.getKey();
+                    Log.d(TAG,"The keys here are: " + ds.getKey());
+
+                    // Populate memberlist with the people we have to consider deleting when necessary
+                    memberList.add(nameRef);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 
 }
