@@ -40,6 +40,7 @@ public class ChoreList extends AppCompatActivity
     private ListView listView;
     private ArrayAdapter<String> aa;
     private ArrayList<String> memberList;
+    private ArrayList <AddChoreInformation> list;
 
 
     @Override
@@ -48,25 +49,159 @@ public class ChoreList extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chore_list);
 
+        //creates a reference to the entire DB
+        databaseRef = FirebaseDatabase.getInstance().getReference();
+        //creates a reference to the houses child
+        houseRef = databaseRef.child("houses");
+        //get the houseName we are in by receiving it from the passed in Intent
+        Intent i = getIntent();
+        houseName = i.getStringExtra("houseName");
+        //get a database reference to the current house we are in
+        currHouseRef = houseRef.child(houseName);
+        //create reference to the housemates of this current house
+        choresRef = currHouseRef.child("Chores");
+        // Housemates reference for deleting houses
+        housematesRef = currHouseRef.child("Housemates");
+        // User side of the DB reference
+        userRef = databaseRef.child("users");
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
+        mCurrentUserRef = userRef.child(mFirebaseUser.getUid()); //gives a reference to the current user's children.
+
         // necessary for deletion of people that are enrolled in their house
         memberList = new ArrayList<String>();
 
-        refreshListView();
+        String listFilter = i.getStringExtra("listFilter");
+        Log.d(TAG, "listFilter == " + listFilter);
+
+        if(listFilter.equals("false"))
+            refreshListView();
+        else
+            getCurrentUserChores();
+
         getHouseMates();
 
+        final Button allChores = (Button) findViewById(R.id.all_chores);
+        allChores.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.d(TAG, "allChores button pressed");
+                Intent intent = new Intent(ChoreList.this, ChoreList.class);
+                intent.putExtra("listFilter", "false");
+                intent.putExtra("houseName", houseName);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        final Button myChores = (Button) findViewById(R.id.my_chores);
+        myChores.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Log.d(TAG, "myChores button pressed");
+                Intent intent = new Intent(ChoreList.this, ChoreList.class);
+                intent.putExtra("listFilter", "true");
+                intent.putExtra("houseName", houseName);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+        //IF ARRAY IS CLICKED
+        //Set a Listener for when a listView item is clicked
+        listView.setOnItemClickListener (new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
+            {
+                AddChoreInformation selected = list.get(position);
+
+                Intent intent = new Intent(ChoreList.this, ChoreDetail.class);
+
+                intent.putExtra("choreName", selected.choreName);
+                intent.putExtra("choreDescription", selected.choreDescription);
+                intent.putExtra("assignee", selected.assignee);
+                intent.putExtra("dateCreated", selected.dateCreated);
+                intent.putExtra("dueDate", selected.dueDate);
+                intent.putExtra("houseName", houseName);
+
+                startActivity(intent);
+            }
+        });
+
+
+        //Add a button listener for the add chore button
+        final Button addChore = (Button) findViewById(R.id.add_chore);
+        addChore.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                addChore();
+            }
+        });
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-
-        refreshListView();
-
+        Log.d(TAG, "INSIDE onResume()");
     }
 
     public void refreshListView()
     {
+        Log.d(TAG, "INSIDE refreshListView()");
+
+
+        //The list that will contain the chores
+        list = new ArrayList<AddChoreInformation>();
+        listView = findViewById(R.id.chore_listview);
+
+        //Retrieve data from firebase
+        choresRef.addListenerForSingleValueEvent (new ValueEventListener() {
+
+            @Override
+            public void onDataChange (DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+
+                    //add chore objects to list so that the other info can be passed on to next intent
+                    String choreName = ds.child("choreName").getValue().toString();
+                    String choreDescription = ds.child("choreDescription").getValue().toString();
+                    String assignee = ds.child("assignee").getValue().toString();
+                    String dateCreated = ds.child("dateCreated").getValue().toString();
+                    String dueDate = ds.child("dueDate").getValue().toString();
+
+                    AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee, dateCreated, dueDate);
+                    list.add(chore);
+                }
+
+                //Create new string array to hold names of chores, which will be displayed in the listView
+                String[] choreItems = new String[list.size()];
+
+                for (int idx = 0; idx < choreItems.length; idx++)
+                {
+                    choreItems[idx] = list.get(idx).choreName;
+                }
+
+                aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
+                listView.setAdapter(aa);
+
+            }
+
+            @Override
+            public void onCancelled (DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void getCurrentUserChores()
+    {
+        Log.d(TAG, "INSIDE getCurrentUserChoices()");
 
         //creates a reference to the entire DB
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -95,7 +230,7 @@ public class ChoreList extends AppCompatActivity
 
 
         //The list that will contain the chores
-        final ArrayList <AddChoreInformation> list = new ArrayList<AddChoreInformation>();
+        list = new ArrayList<AddChoreInformation>();
         listView = findViewById(R.id.chore_listview);
 
         //Retrieve data from firebase
@@ -114,7 +249,13 @@ public class ChoreList extends AppCompatActivity
 
                     AddChoreInformation chore = new AddChoreInformation(choreName, choreDescription, assignee, dateCreated, dueDate);
 
-                    list.add(chore);
+                    Log.d(TAG, "ASSIGNEE == " + assignee);
+                    Log.d(TAG, "getDisplayName() == " + mFirebaseUser.getDisplayName());
+                    String userName = mFirebaseUser.getDisplayName();
+
+                    if(userName.equals(assignee)) {
+                        list.add(chore);
+                    }
                 }
 
                 //Create new string array to hold names of chores, which will be displayed in the listView
@@ -136,39 +277,6 @@ public class ChoreList extends AppCompatActivity
             }
         });
 
-
-
-        //IF ARRAY IS CLICKED
-        //Set a Listener for when a listView item is clicked
-        listView.setOnItemClickListener (new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-
-                AddChoreInformation selected = list.get(position);
-
-                Intent intent = new Intent(ChoreList.this, ChoreDetail.class);
-
-                intent.putExtra("choreName", selected.choreName);
-                intent.putExtra("choreDescription", selected.choreDescription);
-                intent.putExtra("assignee", selected.assignee);
-                intent.putExtra("dateCreated", selected.dateCreated);
-                intent.putExtra("dueDate", selected.dueDate);
-                intent.putExtra("houseName", houseName);
-
-                startActivity(intent);
-            }
-        });
-
-
-        //Add a button listener for the add chore button
-        final Button addChore = (Button) findViewById(R.id.add_chore);
-        addChore.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                addChore();
-            }
-        });
     }
 
     public void addChore()

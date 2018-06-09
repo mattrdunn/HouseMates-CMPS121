@@ -208,7 +208,14 @@ public class AddChore extends AppCompatActivity {
                 }
 
                 addToDatabase(choreName, choreDescription, assignee);
-                finish();
+                Intent choreIntent = new Intent(AddChore.this, ChoreList.class);
+
+                String listFilter = "false";
+                choreIntent.putExtra("houseName", houseName);
+                choreIntent.putExtra("listFilter", listFilter);
+
+                choreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(choreIntent);
             }
         });
 

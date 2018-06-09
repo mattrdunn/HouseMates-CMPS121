@@ -89,9 +89,14 @@ public class ChoreDetail extends AppCompatActivity
         Intent choreIntent = new Intent(ChoreDetail.this, ChoreList.class);
         // Delete chore from DB
         // This putExtra is necessary for chorelist to have a reference to the initial houseName
+        String listFilter = "false";
+        String restartActivity = "true";
         choreIntent.putExtra("houseName", houseName);
+        choreIntent.putExtra("listFilter", listFilter);
 
         houseRef.child(houseName).child("Chores").child(choreName).removeValue();
+
+        choreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(choreIntent);
     }

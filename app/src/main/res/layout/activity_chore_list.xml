@@ -7,25 +7,46 @@
     android:background="@color/colorPrimaryLight"
     tools:context=".ChoreList">
 
-    <!--<Button-->
-    <!--android:id="@+id/add_chore"-->
-    <!--style="?android:attr/borderlessButtonStyle"-->
-    <!--android:layout_width="297dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginLeft="8dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--android:layout_weight="0.5"-->
-    <!--android:background="@color/colorPrimaryDark"-->
-    <!--android:fontFamily="sans-serif"-->
-    <!--android:text="Add Chore"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textAppearance="@style/TextAppearance.AppCompat.Display1"-->
-    <!--android:textColor="@android:color/background_light"-->
-    <!--android:textSize="18sp"-->
-    <!--android:visibility="visible"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent" />-->
+    <Button
+        android:id="@+id/all_chores"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.5"
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="sans-serif"
+        android:text="All Chores"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/my_chores"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.5"
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="sans-serif"
+        android:text="My Chores"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/add_chore"
@@ -45,7 +66,7 @@
     <ListView
         android:id="@+id/chore_listview"
         android:layout_width="351dp"
-        android:layout_height="503dp"
+        android:layout_height="438dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

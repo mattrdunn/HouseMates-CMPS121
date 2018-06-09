@@ -152,6 +152,7 @@ public class MyHouses extends AppCompatActivity
             {
                 Intent intent = new Intent(MyHouses.this, ChoreList.class);
                 String houseName = list.get(position);
+                intent.putExtra("listFilter", "false");
                 intent.putExtra("houseName", houseName);
                 startActivity(intent);
             }
