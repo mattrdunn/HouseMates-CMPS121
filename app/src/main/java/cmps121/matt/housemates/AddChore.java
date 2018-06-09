@@ -200,6 +200,12 @@ public class AddChore extends AppCompatActivity {
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
 
+                if(choreName.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(), "Please specify the chore name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // this call will set the values monthInt, dayInt, and yearInt for the due date
                 // if the entered due date is invalid for any reason, display toast error and return.
                 if(!isValidDueDate())
