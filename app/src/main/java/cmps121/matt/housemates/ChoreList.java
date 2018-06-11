@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -74,7 +75,7 @@ public class ChoreList extends AppCompatActivity
         String listFilter = i.getStringExtra("listFilter");
         Log.d(TAG, "listFilter == " + listFilter);
 
-        if(listFilter.equals("false"))
+        if(listFilter == null || listFilter.equals("false"))
             refreshListView();
         else
             getCurrentUserChores();
@@ -155,6 +156,9 @@ public class ChoreList extends AppCompatActivity
     {
         Log.d(TAG, "INSIDE refreshListView()");
 
+        Button all_chores = (Button) findViewById(R.id.all_chores);
+        all_chores.setBackgroundColor(getResources().getColor(R.color.light_pink));
+
 
         //The list that will contain the chores
         list = new ArrayList<AddChoreInformation>();
@@ -188,6 +192,15 @@ public class ChoreList extends AppCompatActivity
 
                 aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
                 listView.setAdapter(aa);
+
+                //Display a message if there are no houses
+                TextView no_chores = (TextView) findViewById(R.id.no_chores_text);
+                if (list.size() == 0) {
+                    no_chores.setText("No chores to display. Create a chore to get started.");
+                    no_chores.setVisibility(View.VISIBLE);
+                } else {
+                    no_chores.setVisibility(View.INVISIBLE);
+                }
 
             }
 
@@ -228,6 +241,8 @@ public class ChoreList extends AppCompatActivity
         mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
         mCurrentUserRef = userRef.child(mFirebaseUser.getUid()); //gives a reference to the current user's children.
 
+        Button my_chores = (Button) findViewById(R.id.my_chores);
+        my_chores.setBackgroundColor(getResources().getColor(R.color.light_pink));
 
         //The list that will contain the chores
         list = new ArrayList<AddChoreInformation>();
@@ -268,6 +283,15 @@ public class ChoreList extends AppCompatActivity
 
                 aa = new ArrayAdapter<String>(ChoreList.this, R.layout.chore_list_view, choreItems);
                 listView.setAdapter(aa);
+
+                //Display a message if there are no houses
+                TextView no_chores = (TextView) findViewById(R.id.no_chores_text);
+                if (list.size() == 0) {
+                    no_chores.setText("No chores to display. Create a chore to get started.");
+                    no_chores.setVisibility(View.VISIBLE);
+                } else {
+                    no_chores.setVisibility(View.INVISIBLE);
+                }
 
             }
 

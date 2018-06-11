@@ -7,20 +7,20 @@
     android:background="@color/colorPrimaryLight">
 
     <!--<RelativeLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent">-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent">-->
 
 
-        <!--<ListView-->
-            <!--android:id="@+id/house_listview"-->
-            <!--android:layout_width="351dp"-->
-            <!--android:layout_height="438dp"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--android:cacheColorHint="@android:color/transparent"-->
-            <!--android:divider="@null"-->
-            <!--android:dividerHeight="10dp"-->
-            <!--android:listSelector="@android:color/transparent" />-->
+    <!--<ListView-->
+    <!--android:id="@+id/house_listview"-->
+    <!--android:layout_width="351dp"-->
+    <!--android:layout_height="438dp"-->
+    <!--android:layout_marginLeft="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:cacheColorHint="@android:color/transparent"-->
+    <!--android:divider="@null"-->
+    <!--android:dividerHeight="10dp"-->
+    <!--android:listSelector="@android:color/transparent" />-->
 
 
     <!--</RelativeLayout>-->
@@ -47,26 +47,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/notify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="notify"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 
     <Button
         android:id="@+id/create_house"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="192dp"
+        android:layout_height="50dp"
         android:layout_weight="0.5"
         android:background="@color/colorPrimaryDark"
         android:fontFamily="sans-serif"
@@ -77,18 +63,13 @@
         android:textSize="18sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/join_house"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="192dp"
+        android:layout_height="50dp"
         android:layout_weight="0.5"
         android:background="@color/colorPrimaryDark"
         android:fontFamily="sans-serif"
@@ -98,9 +79,27 @@
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/no_houses_text"
+        android:layout_width="351dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        android:textSize="16sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.339" />
 
 
 </android.support.constraint.ConstraintLayout>

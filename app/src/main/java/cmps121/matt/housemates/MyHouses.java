@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,17 +56,6 @@ public class MyHouses extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_houses);
-
-        //NOTIFICATION STUFF
-
-        Button notification_button = (Button) findViewById(R.id.notify);
-        notification_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                addNotification();
-            }
-        });
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();            // reference to the signed-in Firebase user
@@ -105,6 +95,15 @@ public class MyHouses extends AppCompatActivity
                             }
                             aa = new ArrayAdapter<String>(MyHouses.this, R.layout.house_list_view, list);
                             listView.setAdapter(aa);
+
+                            //Display a message if there are no houses
+                            TextView no_houses = (TextView) findViewById(R.id.no_houses_text);
+                            if (list.size() == 0) {
+                                no_houses.setText("No houses to display. Create or join a house to get started.");
+                                no_houses.setVisibility(View.VISIBLE);
+                            } else {
+                                no_houses.setVisibility(View.INVISIBLE);
+                            }
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError)
@@ -192,32 +191,6 @@ public class MyHouses extends AppCompatActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         Log.d(TAG, "Going to log in view activity");
-    }
-
-    private void addNotification()
-    {
-
-        //eventually, this should take us to choreDetail of the specific chore we are being notified of
-        //currently, just dummy data being passed in
-        Intent intent = new Intent (this, ChoreDetail.class);
-        intent.putExtra("choreName", "Chore name");
-        intent.putExtra("choreDescription", "Chore description");
-        intent.putExtra("assignee", "A");
-        intent.putExtra("dateCreated", "Date created");
-        intent.putExtra("dueDate", "Date due");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        mBuilder.setSmallIcon(R.drawable.ic_launcher_round);
-        mBuilder.setContentTitle("You have a new notification");
-        mBuilder.setContentText("Notification description");
-        mBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notificationID, mBuilder.build());
     }
 
 }
