@@ -195,7 +195,7 @@ public class AddChore extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Get info from user-inputted fields
-                //TODO: check input fields for periods, #, [, and ] because firebase doesn't like them
+                
                 String choreName = choreNameText.getText().toString();
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
@@ -203,6 +203,11 @@ public class AddChore extends AppCompatActivity {
                 if(choreName.isEmpty())
                 {
                     Toast.makeText(getApplicationContext(), "Please specify the chore name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //checks that it doesn't contain ., #, [, ]
+                if (!isValidChoreName(choreName)) {
                     return;
                 }
 
@@ -382,5 +387,24 @@ public class AddChore extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         return cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
+    }
+
+    //returns true if chore name doesn't include ., #, [, ]
+    public boolean isValidChoreName (String chore_name) {
+        boolean is_valid = true;
+
+        for (int i = 0; i < chore_name.length(); i++) {
+            if (Character.toString(chore_name.charAt(i)).equals(".") ||
+                    Character.toString(chore_name.charAt(i)).equals("[") ||
+                    Character.toString(chore_name.charAt(i)).equals("]") ||
+                    Character.toString(chore_name.charAt(i)).equals(".") ||
+                    Character.toString(chore_name.charAt(i)).equals("#")) {
+                choreNameText.setError("Chore name cannot include these characters: . # [ ]");
+                focusView = choreNameText;
+                focusView.requestFocus();
+                return false;
+            }
+        }
+        return true;
     }
 }
