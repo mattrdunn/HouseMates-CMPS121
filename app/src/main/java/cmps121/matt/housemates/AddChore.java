@@ -195,7 +195,7 @@ public class AddChore extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Get info from user-inputted fields
-                
+
                 String choreName = choreNameText.getText().toString();
                 String choreDescription = choreDescriptionText.getText().toString();
                 String assignee = assigneeSpinner.getSelectedItem().toString();
@@ -399,7 +399,7 @@ public class AddChore extends AppCompatActivity {
                     Character.toString(chore_name.charAt(i)).equals("]") ||
                     Character.toString(chore_name.charAt(i)).equals(".") ||
                     Character.toString(chore_name.charAt(i)).equals("#")) {
-                choreNameText.setError("Chore name cannot include these characters: . # [ ]");
+                choreNameText.setError("Chore name may not include the following characters: [ ] . #");
                 focusView = choreNameText;
                 focusView.requestFocus();
                 return false;

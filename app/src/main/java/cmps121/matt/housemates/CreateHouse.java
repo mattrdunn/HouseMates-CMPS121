@@ -128,6 +128,7 @@ public class CreateHouse extends AppCompatActivity
                                 // Quick fix for now, we're making pushing another activity on the stack on top
                                 // of the rest instead of finishing activities b/c it won't refresh currently
                                 //TODO: Pass the houseName to the MyHouses intent, just wondering but who wrote this?
+                                //could've possibly been me -cassia
                                 Intent intent = new Intent(CreateHouse.this,MyHouses.class );
                                 startActivity(intent);
                             }
@@ -193,8 +194,29 @@ public class CreateHouse extends AppCompatActivity
             focusView.requestFocus();
             return true;
         }
+
+        if (!no_special_characters(name)) {
+            return true;
+        }
         else
             return false;
+    }
+
+    public boolean no_special_characters (String houseName) {
+
+        for (int i = 0; i < houseName.length(); i++) {
+            if (Character.toString(houseName.charAt(i)).equals(".") ||
+                    Character.toString(houseName.charAt(i)).equals("[") ||
+                    Character.toString(houseName.charAt(i)).equals("]") ||
+                    Character.toString(houseName.charAt(i)).equals(".") ||
+                    Character.toString(houseName.charAt(i)).equals("#")) {
+                houseNameInput.setError("House name may not include the following characters: [ ] . #");
+                focusView = houseNameInput;
+                focusView.requestFocus();
+                return false;
+            }
+        }
+        return true;
     }
 
 }
